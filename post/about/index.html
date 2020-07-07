@@ -9,7 +9,7 @@
 <meta name="description" content="希望你比冬天先到">
 <meta name="theme-color" content="#000">
 <title>关于 | kuangbin</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1594095782167">
+<link rel="shortcut icon" href="/favicon.ico?v=1594109734026">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -363,13 +363,13 @@
     <span class="meta-item">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
-      <span>18<span class="pc-show language" data-lan="words">字数</span></span>
+      <span>16<span class="pc-show language" data-lan="words">字数</span></span>
     </span>
     
   </div>
 </section>
             <div class="post-body next-md-body" id="post_body">
-              <p>这是关于的页面，可以在这里向世界介绍你！</p>
+              <p>这里是kuangbin的博客，用于记录学习与生活</p>
 
             </div>
             
@@ -837,35 +837,104 @@
     <div class="result" id="result">
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/about/"" data-c="
-          &lt;p&gt;这是关于的页面，可以在这里向世界介绍你！&lt;/p&gt;
-">关于</a>
+        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/test-one/"" data-c="
+          &lt;p&gt;&lt;a href=&#34;http://codeforces.com/contest/1371/problem/E1&#34;&gt;传送门&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;题意&#34;&gt;题意&lt;/h1&gt;
+&lt;p&gt;给定长度为n的数组a，表示有n个敌人，第i个敌人有ai颗糖&lt;br&gt;
+定义f(x)为：&lt;br&gt;
+一开始你有x颗糖，对于长度为n的所有排列，都按照排列的顺序去打敌人当你的糖数量&amp;gt;=怪物的糖数量，那么可以打败敌人，且打败之后你的糖数量+1，f(x)的值就是满足条件的排列数，现在给定一个质数p，要求你找出所有的x，满足f(x)%p!=0&lt;br&gt;
+简单版本保证不超过2000&lt;br&gt;
+困难版本保证满足条件的x的数量不超过1e5&lt;br&gt;
+数据范围：n&amp;lt;=1e5，1&amp;lt;=a(i)&amp;lt;=1e9&lt;/p&gt;
+&lt;h1 id=&#34;e1&#34;&gt;E1&lt;/h1&gt;
+&lt;p&gt;对于简单版本，可以考虑o(n^2)的做法。&lt;br&gt;
+设数组a里面的最大值为m，当x&amp;gt;=m时，排列方式为n!，因为p小于等于n，故不满足f(x)%p!=0&lt;br&gt;
+当x&amp;lt; m-n+1时，x不能打败最后一个敌人f(x)=0。故m-n+1&amp;lt;=x&amp;lt; m,对a排序后依次判断即可&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;cstring&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+#include &amp;lt;cmath&amp;gt;
+#include &amp;lt;vector&amp;gt;
+using namespace std;
+#define inf 0x7fffffff
+#define ll long long
+vector&amp;lt;int&amp;gt; ans;
+int a[3000],n,p;
+
+int f(int x){
+    int ans=1,cur=1;
+    for(int i=1;i&amp;lt;=n;i++){
+    	for(;cur&amp;lt;=n;cur++){
+    		if(x&amp;lt;a[cur]){
+            	break;
+        	}
+		} 
+        if((cur-i)%p==0)return 0;
+        x++;
+    }
+    return ans;
+}
+
+int main(){
+    int i, j, k, t, m;
+    scanf(&amp;quot;%d%d&amp;quot;,&amp;amp;n,&amp;amp;p);
+    m=0;
+    for(i=1;i&amp;lt;=n;i++){
+        scanf(&amp;quot;%d&amp;quot;,&amp;amp;a[i]);
+    }
+    sort(a+1,a+1+n);m=a[n];
+    for(i=max(1,m-n+1);i&amp;lt;m;i++){
+        if(f(i)) ans.push_back(i);
+    }
+    k=ans.size();
+    printf(&amp;quot;%d\n&amp;quot;,k);
+    for(i=0;i&amp;lt;k;i++){
+        printf(&amp;quot;%d &amp;quot;,ans[i]);
+    }
+    printf(&amp;quot;\n&amp;quot;);
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;e2&#34;&gt;E2&lt;/h1&gt;
+&lt;p&gt;仔细思考可以发现符合条件的x都是连在一起的，即在同一个区间，因为对于排序后的每一个ai，x必须大于等于a[i]-i+1（打败i-1个敌人后能够达到a[i]），故x=max(x,a[i]-i+1),i=1~n。然后由于排列数不能为p的倍数，故每次可排序的数都要小于p,即当x满足a[i]-i+1时，x必须小于a[i+p-1]-i+1，故x=min(x,a[i+p-1]-(i-1)-1)。复杂度为o(n)。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C++
+#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;cstring&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+#include &amp;lt;queue&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+#include &amp;lt;cmath&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;map&amp;gt;
+using namespace std;
+#define inf 0x7fffffff
+#define ll long long
+ll n, m, p, a[100006];
+int main(){
+    ll i, j, k, t;
+    scanf(&amp;quot;%lld%lld&amp;quot;,&amp;amp;n,&amp;amp;p);
+    for(i=1;i&amp;lt;=n;i++){
+        scanf(&amp;quot;%lld&amp;quot;,&amp;amp;a[i]);
+    }
+    ll l=1,r=1e9;
+    for(i=1;i&amp;lt;=n;i++) l=max(l,a[i]-i+1);
+    for(i=1;i+p-1&amp;lt;=n;i++) r=min(r,a[i+p-1]-i);
+    if(l&amp;gt;r) printf(&amp;quot;0\n&amp;quot;);
+    else{
+        printf(&amp;quot;%lld&amp;quot;,r-l+1);
+        for(i=l;i&amp;lt;=r;i++) printf(&amp;quot;%lld &amp;quot;,i);
+        printf(&amp;quot;\n&amp;quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+">Codeforces Round #654 (Div. 2) E Asterism</a>
       </div>
       
       <div class="item">
-        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/hello-gridea/"" data-c="
-          &lt;p&gt;👏  欢迎使用 &lt;strong&gt;Gridea&lt;/strong&gt; ！&lt;br&gt;
-✍️  &lt;strong&gt;Gridea&lt;/strong&gt; 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...&lt;/p&gt;
-&lt;!-- more --&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/getgridea/gridea&#34;&gt;Github&lt;/a&gt;&lt;br&gt;
-&lt;a href=&#34;http://hvenotes.fehey.com/&#34;&gt;Gridea 主页&lt;/a&gt;&lt;br&gt;
-&lt;a href=&#34;http://fehey.com/&#34;&gt;示例网站&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;特性&#34;&gt;特性👇&lt;/h2&gt;
-&lt;p&gt;📝  你可以使用最酷的 &lt;strong&gt;Markdown&lt;/strong&gt; 语法，进行快速创作&lt;/p&gt;
-&lt;p&gt;🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片&lt;/p&gt;
-&lt;p&gt;🏷️  你可以对文章进行标签分组&lt;/p&gt;
-&lt;p&gt;📋  你可以自定义菜单，甚至可以创建外部链接菜单&lt;/p&gt;
-&lt;p&gt;💻  你可以在 &lt;strong&gt;𝖶𝗂𝗇𝖽𝗈𝗐𝗌&lt;/strong&gt; 或 &lt;strong&gt;𝖬𝖺𝖼𝖮𝖲&lt;/strong&gt; 设备上使用此客户端&lt;/p&gt;
-&lt;p&gt;🌎  你可以使用 &lt;strong&gt;𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌&lt;/strong&gt; 或 &lt;strong&gt;Coding Pages&lt;/strong&gt; 向世界展示，未来将支持更多平台&lt;/p&gt;
-&lt;p&gt;💬  你可以进行简单的配置，接入 &lt;a href=&#34;https://github.com/gitalk/gitalk&#34;&gt;Gitalk&lt;/a&gt; 或 &lt;a href=&#34;https://github.com/SukkaW/DisqusJS&#34;&gt;DisqusJS&lt;/a&gt; 评论系统&lt;/p&gt;
-&lt;p&gt;🇬🇧  你可以使用&lt;strong&gt;中文简体&lt;/strong&gt;或&lt;strong&gt;英语&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力&lt;/p&gt;
-&lt;p&gt;🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步&lt;/p&gt;
-&lt;p&gt;🌱 当然 &lt;strong&gt;Gridea&lt;/strong&gt; 还很年轻，有很多不足，但请相信，它会不停向前🏃&lt;/p&gt;
-&lt;p&gt;未来，它一定会成为你离不开的伙伴&lt;/p&gt;
-&lt;p&gt;尽情发挥你的才华吧！&lt;/p&gt;
-&lt;p&gt;😘 Enjoy~&lt;/p&gt;
-">Hello Gridea</a>
+        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/about/"" data-c="
+          &lt;p&gt;这里是kuangbin的博客，用于记录学习与生活&lt;/p&gt;
+">关于</a>
       </div>
       
     </div>
