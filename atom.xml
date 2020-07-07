@@ -2,18 +2,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-07-07T00:18:30.126Z</updated>
+    <updated>2020-07-07T00:30:37.299Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
-    <link rel="self" href="https://kbxtu.github.io//atom.xml"/>
+    <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
     <subtitle>希望你比冬天先到</subtitle>
-    <logo>https://kbxtu.github.io//images/avatar.png</logo>
-    <icon>https://kbxtu.github.io//favicon.ico</icon>
+    <logo>https://kbxtu.github.io/images/avatar.png</logo>
+    <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://kbxtu.github.io//post/hello-gridea</id>
-        <link href="https://kbxtu.github.io//post/hello-gridea">
+        <id>https://kbxtu.github.io/post/hello-gridea/</id>
+        <link href="https://kbxtu.github.io/post/hello-gridea/">
         </link>
         <updated>2018-12-11T16:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
