@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-07-15T02:58:55.882Z</updated>
+    <updated>2020-08-02T13:20:12.148Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
     <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://kbxtu.github.io/images/avatar.png</logo>
     <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
+    <entry>
+        <title type="html"><![CDATA[Codeforces Round #659 (Div. 2) B2 - Koa and the Beach (Hard Version)]]></title>
+        <id>https://kbxtu.github.io/post/codeforces-round-659-div-2-b2-koa-and-the-beach-hard-version/</id>
+        <link href="https://kbxtu.github.io/post/codeforces-round-659-div-2-b2-koa-and-the-beach-hard-version/">
+        </link>
+        <updated>2020-08-02T13:18:18.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int N=3e5+5;
+int a[N];
+void solve(){
+	int n,k,l,i;
+	scanf(&quot;%d%d%d&quot;,&amp;n,&amp;k,&amp;l);
+	a[0]=a[n+1]=k+1;
+	for(i=1;i&lt;=n;i++)
+		scanf(&quot;%d&quot;,&amp;a[i]),
+		a[i]=l-a[i];//a数组存放上涨a[i]后依然能通过
+	int w=k+1,f=-1;//w表示当前潮汐高度f表示下一秒潮汐变化的数字
+	for(i=1;i&lt;=n;i++){
+		if(a[i]&lt;0){printf(&quot;No\n&quot;);return;}//无法通过
+		else if(a[i]&gt;=k)w=k+1,f=-1;//若潮汐在最高处时这个点还是安全的，可以在这个点等到潮最高时
+		else if(f==-1)w=min(w+f,a[i]);//只要当前是潮落的状态就可以等待
+		else{w+=f;if(w&gt;a[i]){printf(&quot;No\n&quot;);return;}}//若是涨潮状态这个点已经不安全了则说明这个点无法通过
+		if(w==0)f=1;
+	}
+	printf(&quot;Yes\n&quot;);
+}
+ 
+int main(){
+	int T;
+	scanf(&quot;%d&quot;,&amp;T);
+	while(T--)solve();
+	return 0;
+}
+
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[2020牛客多校第一场 I 1 or 2]]></title>
         <id>https://kbxtu.github.io/post/2020-niu-ke-duo-xiao-di-yi-chang-i-1-or-2/</id>
