@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-08-02T13:20:12.148Z</updated>
+    <updated>2020-08-05T08:46:25.954Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
     <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
@@ -10,6 +10,122 @@
     <logo>https://kbxtu.github.io/images/avatar.png</logo>
     <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
+    <entry>
+        <title type="html"><![CDATA[洛谷 P1967 货车运输 NOIP2013]]></title>
+        <id>https://kbxtu.github.io/post/luo-gu-p1967-huo-che-yun-shu-noip2013/</id>
+        <link href="https://kbxtu.github.io/post/luo-gu-p1967-huo-che-yun-shu-noip2013/">
+        </link>
+        <updated>2020-08-05T08:24:08.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P1967">传送门</a></p>
+<h1 id="思路">思路</h1>
+<p>首先建图，题目有重边，可建一棵最大生成树。给出的n有1e4，用floyd算法时间复杂度为n^3, 空间复杂度为n^2.因此需要用lca和树上倍增dp来做，如果询问的x，y不在一棵树上就输出-1，否则就跑个lca.</p>
+<p>#代码</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+using namespace std;
+#define inf 0x3f3f3f3f
+#define ll long long
+#define maxn 100005
+#define mod 998244353
+struct Edge{
+    int to,next,w;
+}edge[maxn];
+struct e{
+    int u,v,w;
+}edge1[maxn];
+int cnt,head[maxn],w[maxn][21],fa[maxn],f[maxn][21],n,m,dep[maxn];
+void add_edge(int u,int v,int w){
+    edge[cnt].to=v;
+    edge[cnt].w=w;
+    edge[cnt].next=head[u];
+    head[u]=cnt++;
+    edge[cnt].to=u;
+    edge[cnt].w=w;
+    edge[cnt].next=head[v];
+    head[v]=cnt++;
+}
+bool cmp(e a,e b){
+    return a.w&gt;b.w;
+}
+void init(){
+    cnt=0; 
+    for(int i=0;i&lt;=n;i++){
+		head[i]=-1,fa[i]=i;
+	} 
+}
+int find(int x){
+    return fa[x]==x?x:(fa[x]=find(fa[x]));
+}
+int lca(int x,int y){
+    int i,ans=inf;
+    if(dep[x]&gt;dep[y]) swap(x,y);
+    for(i=20;i&gt;=0;i--){
+        if(dep[f[y][i]]&gt;=dep[x]) ans=min(ans,w[y][i]),y=f[y][i];
+        if(x==y) return ans;
+    }
+    for(i=20;i&gt;=0;i--){
+        if(f[x][i]!=f[y][i]){
+            ans=min(ans,min(w[x][i],w[y][i]));
+            x=f[x][i],y=f[y][i];
+        }
+    }
+    return min(ans,min(w[x][0],w[y][0]));
+}
+void build(){
+    for(int i=1;i&lt;=m;i++){
+        int u=edge1[i].u,v=edge1[i].v;
+        int fu=find(u),fv=find(v);
+        if(fu==fv) continue;
+        add_edge(u,v,edge1[i].w);
+        fa[fv]=fu;
+    }
+}
+void dfs(int x){
+    int i,j;
+    for(i=head[x];i!=-1;i=edge[i].next){
+        int v=edge[i].to,ww=edge[i].w;
+        if(dep[v]) continue;
+        dep[v]=dep[x]+1;
+		w[v][0]=ww;
+		f[v][0]=x;
+        for(j=1;(1&lt;&lt;j)&lt;dep[v];j++) f[v][j]=f[f[v][j-1]][j-1],w[v][j]=min(w[v][j-1],w[f[v][j-1]][j-1]);
+        dfs(v);
+    }
+}
+
+int main(){
+    int i, j, k, t;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    int u, v;
+    init();
+    for(i=1;i&lt;=m;i++)
+        scanf(&quot;%d%d%d&quot;,&amp;edge1[i].u,&amp;edge1[i].v,&amp;edge1[i].w);
+    sort(edge1+1,edge1+m+1,cmp);
+    build();
+    for(i=1;i&lt;=n;i++){
+        if(dep[i]) continue;
+        dep[i]=1;
+        dfs(i);
+    }
+    scanf(&quot;%d&quot;,&amp;t);
+    while(t--){
+        scanf(&quot;%d %d&quot;,&amp;u,&amp;v);
+        if(find(u)!=find(v)){
+            printf(&quot;-1\n&quot;);
+            continue;
+        }
+        printf(&quot;%d\n&quot;,lca(u,v));
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Codeforces Round #659 (Div. 2) B2 - Koa and the Beach (Hard Version)]]></title>
         <id>https://kbxtu.github.io/post/codeforces-round-659-div-2-b2-koa-and-the-beach-hard-version/</id>
