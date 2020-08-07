@@ -9,7 +9,7 @@
 <meta name="description" content="希望你比冬天先到">
 <meta name="theme-color" content="#000">
 <title>Educational Codeforces Round 89 (Rated for Div. 2) E. Two Arrays | kuangbin</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1596617180986">
+<link rel="shortcut icon" href="/favicon.ico?v=1596764795391">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -225,7 +225,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">5</span>
+        <span class="site-item-stat-count">6</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1189,6 +1189,127 @@ int main(){
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/noip-xun-lian-ying-nei-bu-shi-ti-shu-shu-shu-xing-dpbei-zeng/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;清北学堂NOIP训练营试题T3试题&lt;br&gt;
+&lt;img src=&#34;https://kbxtu.github.io//post-images/1596763009580.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+样例读入：&lt;br&gt;
+4&lt;br&gt;
+1 2&lt;br&gt;
+1 3&lt;br&gt;
+2 4&lt;br&gt;
+样例输出：&lt;br&gt;
+8&lt;br&gt;
+样例解释：&lt;br&gt;
+&lt;img src=&#34;https://kbxtu.github.io//post-images/1596763033186.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;思路&#34;&gt;思路&lt;/h1&gt;
+&lt;p&gt;首先看到二进制和最近公共祖先可以想到这题可以用倍增做，从大到小枚举k，只要不越界就跳，最后一定能&lt;/p&gt;
+&lt;p&gt;跳到LCA（注意是是从大到小跳，不能随意改变顺序跳，因为要注意算重复的问题），因为跳的都是2的幂次&lt;/p&gt;
+&lt;p&gt;步，所以每跳一步就是二进制加了一个1。先预处理lca[i][k],表示点i向上跳2^k 步的祖先节点。&lt;/p&gt;
+&lt;p&gt;设 f[i][j] 表示最后一步跳了2^j步，跳到了点i的点的二进制1数量之和&lt;/p&gt;
+&lt;p&gt;cnt[i][j] 表示最后一步跳了2^j步，跳到了点i的点数&lt;/p&gt;
+&lt;p&gt;因为有了倍增求lCA原理的保证，所以只需要考虑跳2的幂次步&lt;/p&gt;
+&lt;p&gt;设sons[i]表示以i为根的子树的大小&lt;/p&gt;
+&lt;p&gt;nxt[i]=j 表示当前点属于i的子树里，以j为根节点的子树&lt;/p&gt;
+&lt;p&gt;假设dfs回溯到x，转移分两种：&lt;/p&gt;
+&lt;p&gt;1、以x为链的一个端点&lt;/p&gt;
+&lt;p&gt;枚举x向上跳2^j次，则v=lca[x][j]&lt;/p&gt;
+&lt;p&gt;那么ans+=sons[v]-ssons[nxt[v]] ——所有非rt[v]子树的点，与x的LCA都是v，都会有1的贡献&lt;/p&gt;
+&lt;p&gt;（类似于点分治中要去除同一子树内合法的点）&lt;/p&gt;
+&lt;p&gt;cnt[v][k]++， f[v][k]++&lt;/p&gt;
+&lt;p&gt;2、x作为倍增过程中的一个中途点&lt;/p&gt;
+&lt;p&gt;那么枚举最后一步跳了2^i 跳到了x&lt;/p&gt;
+&lt;p&gt;枚举x再往上跳2^j步,则v=fa[x][j]&lt;/p&gt;
+&lt;p&gt;那么ans+=（f[x][i]+cnt[x][i]）*（siz[v]-siz[rt[v]]）&lt;/p&gt;
+&lt;p&gt;f[x][i] 是原来的答案，在以v做LCA时，又会用 （siz[v]-siz[rt[v]]）次&lt;/p&gt;
+&lt;p&gt;cnt[x][i] 是要再往上跳2^j步，每个点又有一个1的贡献&lt;/p&gt;
+&lt;p&gt;cnt[v][j]+=cnt[x][i] ，f[v][j]+=f[x][i]+cnt[x][i]&lt;/p&gt;
+&lt;p&gt;例：1--2--3--4 如果4到1的距离为3，二进制为11，对答案的贡献为2&lt;/p&gt;
+&lt;p&gt;回溯到4的时候，以4为端点会累积3--4 2--4&lt;/p&gt;
+&lt;p&gt;回溯到3的时候，以3为端点会累积2--3 1--3&lt;/p&gt;
+&lt;p&gt;回溯到2的时候，以2为端点会累积1--2，以2为中途点会累积1--2--3--4&lt;/p&gt;
+&lt;p&gt;（4跳2&lt;sup&gt;1累积到2里，然后在枚举2为中途点时，最后一步跳了2&lt;/sup&gt;1到2,2再往上跳2^0）&lt;/p&gt;
+&lt;p&gt;为什么在枚举3作为中途点的时候，不枚举跳了2^0次方到了3&lt;/p&gt;
+&lt;p&gt;因为此时3不是中途点，我们是按跳2^k，k是降序跳的&lt;/p&gt;
+&lt;p&gt;个人总结：支持本题不重不漏的原理就是倍增求LCA的原理&lt;/p&gt;
+&lt;p&gt;或者是说任意数可以拆为2&lt;sup&gt;k1+2&lt;/sup&gt;k2+2^k3…… ki 依次递减&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+#include &amp;lt;cstdlib&amp;gt;
+#include &amp;lt;cstring&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;lt;cmath&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#define st first
+#define nd second
+using namespace std;
+struct edge {
+	int x;
+	int nxt;
+};
+typedef long long LL;
+const int N = 1E5 + 10;
+edge e[2*N];
+int lca[N][17], hd[N], fa[N], sons[N], nxt[N], cnt[N][17], f[N][17];
+int n, m, x, y, l;// cnt[x][j]是最后一步跳2^j次方步来到x的点数 
+LL ans;// f[x][j]是最后一步跳2^j次方步来到x的点上总共的1的数目 
+void link(int x, int y){
+	e[++l].x = y;
+	e[l].nxt = hd[x];
+	hd[x] = l;
+}
+void dfs_lca(int x) {
+	lca[x][0] = fa[x];
+	sons[x] = 1;
+	for (int i = 1; i &amp;lt;= 16; ++i)
+	lca[x][i] = lca[lca[x][i - 1]][i - 1];
+	for (int p = hd[x]; p; p = e[p].nxt)
+		if(e[p].x != fa[x]){
+			fa[e[p].x] = x;
+			dfs_lca(e[p].x);
+			sons[x] += sons[e[p].x];
+		}
+}
+
+void dfs_ans(int x) {
+	for (int p=hd[x]; p; p=e[p].nxt)
+		if(e[p].x!=fa[x]) nxt[x]=e[p].x,dfs_ans(e[p].x);
+	for (int i = 0; i &amp;lt;= 16; ++i){ //x作为链条的一端，所以每次只加一 
+		ans+=sons[lca[x][i]]-sons[nxt[lca[x][i]]];  //链端的点，只加一次 
+		//if(sons[lca[x][i]] - sons[nxt[lca[x][i]]]) 
+		//	printf(&amp;quot;%d : sons[%d]-sons[%d]=%d\n&amp;quot;,x,lca[x][i],nxt[lca[x][i]],sons[lca[x][i]]-sons[nxt[lca[x][i]]]);
+		cnt[lca[x][i]][i]++;
+		f[lca[x][i]][i]++;
+	}//降序枚举，不重不漏 
+	for (int i = 1; i &amp;lt;= 16; ++i)  //x作为倍增的中途点，每一次要把之前来的也要加上 
+		for (int j = 0; j &amp;lt;= i - 1; ++j){//并且倍增到lca[x][j]时还要把当前点数和当前点再加一次 
+			ans+=LL(cnt[x][i]+ f[x][i])*LL(sons[lca[x][j]]-sons[nxt[lca[x][j]]]);
+			//if(LL(cnt[x][i]+f[x][i])*LL(sons[lca[x][j]]-sons[nxt[lca[x][j]]]))			
+			//	printf(&amp;quot;%d : cnt[%d][%d]+f[%d][%d] * sons[%d]-sons[%d] = %I64d\n&amp;quot;,x,x,i,x,i,lca[x][j],nxt[lca[x][j]],LL(cnt[x][i] + f[x][i]) * LL(sons[lca[x][j]] - sons[nxt[lca[x][j]]]));			
+			cnt[lca[x][j]][j]+=cnt[x][i];
+			f[lca[x][j]][j]+=f[x][i]+cnt[x][i];
+		}
+}
+
+int main(){
+	scanf(&amp;quot;%d&amp;quot;, &amp;amp;n);
+	for (int i = 1; i &amp;lt; n; ++i){
+		scanf(&amp;quot;%d%d&amp;quot;, &amp;amp;x, &amp;amp;y);
+		link(x, y);
+		link(y, x);
+	}
+	dfs_lca(1);
+	sons[0] = sons[1];
+	nxt[0] = 1;
+	dfs_ans(1);
+	printf(&amp;quot;%I64d\n&amp;quot;, ans);
+}
+&lt;/code&gt;&lt;/pre&gt;
+">NOIP训练营内部试题-数数（树形DP+倍增）</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/luo-gu-p1967-huo-che-yun-shu-noip2013/"" data-c="

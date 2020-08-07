@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-08-05T08:46:25.954Z</updated>
+    <updated>2020-08-07T01:47:43.640Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
     <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
@@ -10,6 +10,130 @@
     <logo>https://kbxtu.github.io/images/avatar.png</logo>
     <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
+    <entry>
+        <title type="html"><![CDATA[NOIP训练营内部试题-数数（树形DP+倍增）]]></title>
+        <id>https://kbxtu.github.io/post/noip-xun-lian-ying-nei-bu-shi-ti-shu-shu-shu-xing-dpbei-zeng/</id>
+        <link href="https://kbxtu.github.io/post/noip-xun-lian-ying-nei-bu-shi-ti-shu-shu-shu-xing-dpbei-zeng/">
+        </link>
+        <updated>2020-08-07T01:07:34.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>清北学堂NOIP训练营试题T3试题<br>
+<img src="https://kbxtu.github.io//post-images/1596763009580.jpg" alt="" loading="lazy"><br>
+样例读入：<br>
+4<br>
+1 2<br>
+1 3<br>
+2 4<br>
+样例输出：<br>
+8<br>
+样例解释：<br>
+<img src="https://kbxtu.github.io//post-images/1596763033186.jpg" alt="" loading="lazy"></p>
+</blockquote>
+<h1 id="思路">思路</h1>
+<p>首先看到二进制和最近公共祖先可以想到这题可以用倍增做，从大到小枚举k，只要不越界就跳，最后一定能</p>
+<p>跳到LCA（注意是是从大到小跳，不能随意改变顺序跳，因为要注意算重复的问题），因为跳的都是2的幂次</p>
+<p>步，所以每跳一步就是二进制加了一个1。先预处理lca[i][k],表示点i向上跳2^k 步的祖先节点。</p>
+<p>设 f[i][j] 表示最后一步跳了2^j步，跳到了点i的点的二进制1数量之和</p>
+<p>cnt[i][j] 表示最后一步跳了2^j步，跳到了点i的点数</p>
+<p>因为有了倍增求lCA原理的保证，所以只需要考虑跳2的幂次步</p>
+<p>设sons[i]表示以i为根的子树的大小</p>
+<p>nxt[i]=j 表示当前点属于i的子树里，以j为根节点的子树</p>
+<p>假设dfs回溯到x，转移分两种：</p>
+<p>1、以x为链的一个端点</p>
+<p>枚举x向上跳2^j次，则v=lca[x][j]</p>
+<p>那么ans+=sons[v]-ssons[nxt[v]] ——所有非rt[v]子树的点，与x的LCA都是v，都会有1的贡献</p>
+<p>（类似于点分治中要去除同一子树内合法的点）</p>
+<p>cnt[v][k]++， f[v][k]++</p>
+<p>2、x作为倍增过程中的一个中途点</p>
+<p>那么枚举最后一步跳了2^i 跳到了x</p>
+<p>枚举x再往上跳2^j步,则v=fa[x][j]</p>
+<p>那么ans+=（f[x][i]+cnt[x][i]）*（siz[v]-siz[rt[v]]）</p>
+<p>f[x][i] 是原来的答案，在以v做LCA时，又会用 （siz[v]-siz[rt[v]]）次</p>
+<p>cnt[x][i] 是要再往上跳2^j步，每个点又有一个1的贡献</p>
+<p>cnt[v][j]+=cnt[x][i] ，f[v][j]+=f[x][i]+cnt[x][i]</p>
+<p>例：1--2--3--4 如果4到1的距离为3，二进制为11，对答案的贡献为2</p>
+<p>回溯到4的时候，以4为端点会累积3--4 2--4</p>
+<p>回溯到3的时候，以3为端点会累积2--3 1--3</p>
+<p>回溯到2的时候，以2为端点会累积1--2，以2为中途点会累积1--2--3--4</p>
+<p>（4跳2<sup>1累积到2里，然后在枚举2为中途点时，最后一步跳了2</sup>1到2,2再往上跳2^0）</p>
+<p>为什么在枚举3作为中途点的时候，不枚举跳了2^0次方到了3</p>
+<p>因为此时3不是中途点，我们是按跳2^k，k是降序跳的</p>
+<p>个人总结：支持本题不重不漏的原理就是倍增求LCA的原理</p>
+<p>或者是说任意数可以拆为2<sup>k1+2</sup>k2+2^k3…… ki 依次递减</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;string&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+#define st first
+#define nd second
+using namespace std;
+struct edge {
+	int x;
+	int nxt;
+};
+typedef long long LL;
+const int N = 1E5 + 10;
+edge e[2*N];
+int lca[N][17], hd[N], fa[N], sons[N], nxt[N], cnt[N][17], f[N][17];
+int n, m, x, y, l;// cnt[x][j]是最后一步跳2^j次方步来到x的点数 
+LL ans;// f[x][j]是最后一步跳2^j次方步来到x的点上总共的1的数目 
+void link(int x, int y){
+	e[++l].x = y;
+	e[l].nxt = hd[x];
+	hd[x] = l;
+}
+void dfs_lca(int x) {
+	lca[x][0] = fa[x];
+	sons[x] = 1;
+	for (int i = 1; i &lt;= 16; ++i)
+	lca[x][i] = lca[lca[x][i - 1]][i - 1];
+	for (int p = hd[x]; p; p = e[p].nxt)
+		if(e[p].x != fa[x]){
+			fa[e[p].x] = x;
+			dfs_lca(e[p].x);
+			sons[x] += sons[e[p].x];
+		}
+}
+
+void dfs_ans(int x) {
+	for (int p=hd[x]; p; p=e[p].nxt)
+		if(e[p].x!=fa[x]) nxt[x]=e[p].x,dfs_ans(e[p].x);
+	for (int i = 0; i &lt;= 16; ++i){ //x作为链条的一端，所以每次只加一 
+		ans+=sons[lca[x][i]]-sons[nxt[lca[x][i]]];  //链端的点，只加一次 
+		//if(sons[lca[x][i]] - sons[nxt[lca[x][i]]]) 
+		//	printf(&quot;%d : sons[%d]-sons[%d]=%d\n&quot;,x,lca[x][i],nxt[lca[x][i]],sons[lca[x][i]]-sons[nxt[lca[x][i]]]);
+		cnt[lca[x][i]][i]++;
+		f[lca[x][i]][i]++;
+	}//降序枚举，不重不漏 
+	for (int i = 1; i &lt;= 16; ++i)  //x作为倍增的中途点，每一次要把之前来的也要加上 
+		for (int j = 0; j &lt;= i - 1; ++j){//并且倍增到lca[x][j]时还要把当前点数和当前点再加一次 
+			ans+=LL(cnt[x][i]+ f[x][i])*LL(sons[lca[x][j]]-sons[nxt[lca[x][j]]]);
+			//if(LL(cnt[x][i]+f[x][i])*LL(sons[lca[x][j]]-sons[nxt[lca[x][j]]]))			
+			//	printf(&quot;%d : cnt[%d][%d]+f[%d][%d] * sons[%d]-sons[%d] = %I64d\n&quot;,x,x,i,x,i,lca[x][j],nxt[lca[x][j]],LL(cnt[x][i] + f[x][i]) * LL(sons[lca[x][j]] - sons[nxt[lca[x][j]]]));			
+			cnt[lca[x][j]][j]+=cnt[x][i];
+			f[lca[x][j]][j]+=f[x][i]+cnt[x][i];
+		}
+}
+
+int main(){
+	scanf(&quot;%d&quot;, &amp;n);
+	for (int i = 1; i &lt; n; ++i){
+		scanf(&quot;%d%d&quot;, &amp;x, &amp;y);
+		link(x, y);
+		link(y, x);
+	}
+	dfs_lca(1);
+	sons[0] = sons[1];
+	nxt[0] = 1;
+	dfs_ans(1);
+	printf(&quot;%I64d\n&quot;, ans);
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[洛谷 P1967 货车运输 NOIP2013]]></title>
         <id>https://kbxtu.github.io/post/luo-gu-p1967-huo-che-yun-shu-noip2013/</id>
