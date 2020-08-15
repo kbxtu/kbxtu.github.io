@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-08-07T01:49:20.938Z</updated>
+    <updated>2020-08-15T03:34:15.202Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
     <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
@@ -10,6 +10,167 @@
     <logo>https://kbxtu.github.io/images/avatar.png</logo>
     <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
+    <entry>
+        <title type="html"><![CDATA[2020杭电多校7 hdu6853 Jogging]]></title>
+        <id>https://kbxtu.github.io/post/2020-hang-dian-duo-xiao-7-hdu6853-jogging/</id>
+        <link href="https://kbxtu.github.io/post/2020-hang-dian-duo-xiao-7-hdu6853-jogging/">
+        </link>
+        <updated>2020-08-14T03:48:31.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=6853">传送门</a></p>
+<h1 id="题意">题意</h1>
+<p>好点集合的定义如下，对于一个点（x,y），如果gcd(x,y)&gt;1，则为好点。<br>
+给你一个点，从该点开始，等可能的前往周围的八个方向的好点，或停留在原地。<br>
+问你走过无穷步之后，回到初始点的概率是多少</p>
+<h1 id="思路">思路</h1>
+<p><img src="https://kbxtu.github.io//post-images/1597379404888.png" alt="" loading="lazy"><br>
+“图上随机游走”算法结论就是在建出无向图后，答案就是 “起点的度数 + 1 ” 除以 “总度数 + n”</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+#include &lt;set&gt;
+using namespace std;
+#define inf 0x3f3f3f3f
+#define ll long long
+#define maxn 20005
+#define mod 998244353
+ll gcd(ll x,ll y){
+    return !y?x:gcd(y,x%y);
+}
+struct node{
+    ll u,v;
+    bool operator&lt;(const node &amp;x)const{
+        if(u!=x.u) return u&lt;x.u;
+        return v&lt;x.v;
+    }
+}tmp,tmp1;
+ll pos[9][2]={{0,1},{0,-1},{-1,0},{-1,-1},{-1,1},{1,-1},{1,0},{1,1}};
+int main(){
+    ll i, j, k, t, n, x, y;
+    scanf(&quot;%lld&quot;,&amp;t);
+    while(t--){
+        set&lt;node&gt; s;    
+        ll sum=0,chu=0;
+        scanf(&quot;%lld%lld&quot;,&amp;tmp.u,&amp;tmp.v);
+        if(tmp.u==tmp.v){
+        	printf(&quot;0/1\n&quot;);
+        	continue;
+		} 
+        int flag=0;
+        queue&lt;node&gt; q;
+        q.push(tmp);
+        s.insert(tmp);
+        while(!q.empty()){
+            tmp=q.front();
+            q.pop();
+            sum++; 
+            for(i=0;i&lt;8;i++){
+                tmp1.u=tmp.u+pos[i][0];
+                tmp1.v=tmp.v+pos[i][1];
+                if(tmp1.u==tmp1.v){
+                    flag=1;break;
+                } 
+                if(gcd(tmp1.u,tmp1.v)==1) continue;
+                sum++;
+                if(s.count(tmp1)) continue;
+                s.insert(tmp1);
+                q.push(tmp1);
+            }
+            if(flag) break;
+            if(!chu) chu=sum;
+        }
+        if(flag){
+        	printf(&quot;0/1\n&quot;);
+        	continue;
+		} 
+        ll g=gcd(chu,sum);
+        printf(&quot;%lld/%lld\n&quot;,chu/g,sum/g);
+    }
+}
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[2020杭电多校7 hdu6850 Game]]></title>
+        <id>https://kbxtu.github.io/post/hdu6850/</id>
+        <link href="https://kbxtu.github.io/post/hdu6850/">
+        </link>
+        <updated>2020-08-13T02:13:35.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=6850">传送门</a></p>
+<h1 id="题意">题意</h1>
+<p>给你一堆点，石子在给出的第一个点，两个人互相移动石子，要求每一次移动的距离大于上一次的距离，</p>
+<h1 id="思路">思路</h1>
+<p>博弈论，比赛前由于刚学的SG函数，没太会应用，一直在考虑点结束，其实看了题应该明白这道题是边结束。<br>
+首先可以建立一个完全图，边权值为两点的距离。考虑最长边，如果一个人选到了这条边，则下一个人必胜。然后我们考虑次长边……这样即把问题分割成了一个子问题。<br>
+每次选取最长边，然后把该边两点标记，再选取图中下一条非标记点的最长边。如果在此过程中标记了1，意味着从1开始的先手可以选当标记了1的最长边，必胜。由于这种取法至多只剩下一个点未被标记，因为点数大于1时，意味则这两点间距离可选。所以如果最后只剩下1未被选，则意味着先手无论选哪个点，后手都能选到该点的最长边，必败。</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+using namespace std;
+#define inf 0x3f3f3f3f
+#define ll long long
+#define maxn 2005
+#define mod 998244353
+struct node{
+    ll x,y;
+}a[maxn];
+struct node1{
+    ll x,y,r;
+}dis[maxn*maxn];
+bool cmp(node1 x,node1 y){
+    return x.r&gt;y.r;
+}
+
+int main(){
+    int i, j, k, t, n;
+    scanf(&quot;%d&quot;,&amp;t);
+    while(t--){
+        int cur=0;
+        scanf(&quot;%d&quot;,&amp;n);
+        int vis[maxn]={0};
+        for(i=1;i&lt;=n;i++){
+            scanf(&quot;%lld%lld&quot;,&amp;a[i].x,&amp;a[i].y);
+            for(j=1;j&lt;i;j++){
+                ll r=(a[j].x-a[i].x)*(a[j].x-a[i].x)+(a[j].y-a[i].y)*(a[j].y-a[i].y);
+                dis[++cur].r=r;
+                dis[cur].x=j;
+                dis[cur].y=i;
+            }
+        }
+        sort(dis+1,dis+1+cur,cmp);
+        for(i=1;i&lt;=cur;i++){
+            ll x=dis[i].x,y=dis[i].y,r=dis[i].r;
+            if(vis[x]||vis[y]) continue;
+            j=i+1;
+            vis[x]=vis[y]=i;
+            while(j&lt;=cur&amp;&amp;r==dis[j].r){
+            	if((!vis[dis[j].x]||vis[dis[j].x]==i)&amp;&amp;(!vis[dis[j].y]||vis[dis[j].y]==i)){
+            		vis[dis[j].x]=vis[dis[j].y]=i;
+                	
+				}
+                j++;
+            }
+            i=j-1;
+            if(vis[1]) break;
+        }
+        if(vis[1]) printf(&quot;YES\n&quot;);
+        else printf(&quot;NO\n&quot;);
+    }
+}
+
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[NOIP训练营内部试题-数数（树形DP+倍增）]]></title>
         <id>https://kbxtu.github.io/post/noip-xun-lian-ying-nei-bu-shi-ti-shu-shu-shu-xing-dpbei-zeng/</id>
