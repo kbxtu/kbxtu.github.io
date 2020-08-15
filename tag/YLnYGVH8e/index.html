@@ -9,7 +9,7 @@
 <meta name="description" content="希望你比冬天先到">
 <meta name="theme-color" content="#000">
 <title>kuangbin</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1597462435171">
+<link rel="shortcut icon" href="/favicon.ico?v=1597462844709">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -207,19 +207,19 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">8</span>
+        <span class="site-item-stat-count">9</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="">
-        <span class="site-item-stat-count">10</span>
+        <span class="site-item-stat-count">11</span>
         <span class="site-item-stat-name language" data-lan="category">分类</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="/tags/">
-        <span class="site-item-stat-count">10</span>
+        <span class="site-item-stat-count">11</span>
         <span class="site-item-stat-name language" data-lan="tag">标签</span>
       </a>
     </div>
@@ -265,6 +265,10 @@
           <small class="language" data-lan="tag">标签</small>
         </h2>
       </div>
+      
+      
+      
+      
       
       
       
@@ -541,6 +545,39 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/xian-xing-qiu-cheng-fa-ni-yuan/"" data-c="
+          &lt;p&gt;用于求一连串数字对于一个 mod p的逆元。如果只是求一个数的逆元建议使用费马小定理或扩展欧几里德定理。&lt;br&gt;
+线性算法求逆元的原理：&lt;br&gt;
+已知， (1/1)≡1 (mod p) , 设 p=k∗i+r,(1&amp;lt;r&amp;lt;i&amp;lt;p) ， 即k 是 p/i的商 ， r 是 p/i 的余数。&lt;br&gt;
+即 k∗i+r≡0 (mod p)。 ≡左右两边同时乘上(1/i)*(1/r) ， 即 k * (1/r) + (1/i) ≡0 (modp) 。&lt;br&gt;
+移项可得 ， (1/i) ≡ - k * (1/r) (mod p) 。&lt;br&gt;
+即 （1/i） ≡ (-p/i) * (1/(p%i)) (mod p) 。&lt;br&gt;
+即 inv[i] ≡ （long long）(-p/i + p) * inv[p%i] (mod p) 。&lt;/p&gt;
+&lt;p&gt;源码如下所示：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+using namespace std;
+const int maxn = 3e6+10;
+int inv[maxn];
+
+int main(){
+	int n,p;
+	cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; p;
+	inv[1] = 1;
+	cout &amp;lt;&amp;lt; inv[1] &amp;lt;&amp;lt; endl;
+	for(int i = 2;i &amp;lt;= n;i++){
+		inv[i] = (long long)(-p/i+p)*inv[p%i]%p;
+		printf(&amp;quot;%d\n&amp;quot;,inv[i]);
+	}
+	return 0;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+">线性求乘法逆元</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://kbxtu.github.io/post/2020-hang-dian-duo-xiao-7-hdu6853-jogging/"" data-c="

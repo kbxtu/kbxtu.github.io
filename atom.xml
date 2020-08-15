@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kbxtu.github.io/</id>
     <title>kuangbin</title>
-    <updated>2020-08-15T03:34:15.202Z</updated>
+    <updated>2020-08-15T03:40:49.048Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kbxtu.github.io/"/>
     <link rel="self" href="https://kbxtu.github.io/atom.xml"/>
@@ -10,6 +10,42 @@
     <logo>https://kbxtu.github.io/images/avatar.png</logo>
     <icon>https://kbxtu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, kuangbin</rights>
+    <entry>
+        <title type="html"><![CDATA[线性求乘法逆元]]></title>
+        <id>https://kbxtu.github.io/post/xian-xing-qiu-cheng-fa-ni-yuan/</id>
+        <link href="https://kbxtu.github.io/post/xian-xing-qiu-cheng-fa-ni-yuan/">
+        </link>
+        <updated>2020-08-15T03:38:46.000Z</updated>
+        <content type="html"><![CDATA[<p>用于求一连串数字对于一个 mod p的逆元。如果只是求一个数的逆元建议使用费马小定理或扩展欧几里德定理。<br>
+线性算法求逆元的原理：<br>
+已知， (1/1)≡1 (mod p) , 设 p=k∗i+r,(1&lt;r&lt;i&lt;p) ， 即k 是 p/i的商 ， r 是 p/i 的余数。<br>
+即 k∗i+r≡0 (mod p)。 ≡左右两边同时乘上(1/i)*(1/r) ， 即 k * (1/r) + (1/i) ≡0 (modp) 。<br>
+移项可得 ， (1/i) ≡ - k * (1/r) (mod p) 。<br>
+即 （1/i） ≡ (-p/i) * (1/(p%i)) (mod p) 。<br>
+即 inv[i] ≡ （long long）(-p/i + p) * inv[p%i] (mod p) 。</p>
+<p>源码如下所示：</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstdio&gt;
+using namespace std;
+const int maxn = 3e6+10;
+int inv[maxn];
+
+int main(){
+	int n,p;
+	cin &gt;&gt; n &gt;&gt; p;
+	inv[1] = 1;
+	cout &lt;&lt; inv[1] &lt;&lt; endl;
+	for(int i = 2;i &lt;= n;i++){
+		inv[i] = (long long)(-p/i+p)*inv[p%i]%p;
+		printf(&quot;%d\n&quot;,inv[i]);
+	}
+	return 0;
+}
+
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[2020杭电多校7 hdu6853 Jogging]]></title>
         <id>https://kbxtu.github.io/post/2020-hang-dian-duo-xiao-7-hdu6853-jogging/</id>
